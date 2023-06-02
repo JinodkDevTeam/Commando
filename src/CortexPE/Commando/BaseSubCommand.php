@@ -117,6 +117,14 @@ abstract class BaseSubCommand implements IArgumentable, IRunnable {
 		$this->permissions = $permissions;
 	}
 
+	public function setPermission(string $permission): void {
+		$permissionManager = PermissionManager::getInstance();
+		if($permissionManager->getPermission($permission) === null){
+			throw new \InvalidArgumentException("Cannot use non-existing permission \"$permission\"");
+		}
+		$this->permissions[] = $permission;
+	}
+
 	public function testPermissionSilent(CommandSender $sender): bool {
 		foreach($this->permissions as $permission) {
 			if($sender->hasPermission($permission)) {
